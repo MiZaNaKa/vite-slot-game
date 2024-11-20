@@ -8,7 +8,10 @@ interface CustomModalProps {
   showSymbols?: string;
   timer?: number;
   total?: number;
+  TotalCount?: number
   showTimer?: number;
+  Result?: number;
+  
 
 }
 
@@ -31,7 +34,7 @@ const month = today.toLocaleString('default', { month: 'long' });
 const year = today.getFullYear();
 
 const formattedDate = `${day}.${month}.${year}`;
-console.log(formattedDate);
+
 
 const CustomModal: React.FC<CustomModalProps> = ({
   isOpen,
@@ -39,7 +42,9 @@ const CustomModal: React.FC<CustomModalProps> = ({
   showSymbols,
   timer,
   total,
-  showTimer
+  showTimer,
+  TotalCount,
+  Result
 }) => {
   return (
     <Modal
@@ -52,7 +57,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
         <h2 className='Date'>{formattedDate}</h2>
         {showSymbols ?
           <div>
-            <h3 className='timer'>The 616 Game Result</h3>
+            <h3 className='timer'>The {Result} Game Result</h3>
 
             <p className='showSymbols'>
               {showSymbols}{showSymbols === '🍒' ? "Cherry" : "Watermalon"}
@@ -62,10 +67,10 @@ const CustomModal: React.FC<CustomModalProps> = ({
           :
           <div>
             <h2 className='timer'><span>{timer}</span> Seconds</h2>
-            <h3 className='timer'><span>The 669 Game begins</span></h3>
+            <h3 className='timer'><span>The {TotalCount} Game begins</span></h3>
 
             
-            <p className='total'>Total is {total}</p>
+            {/* <p className='total'>Total is {total}</p> */}
           </div>
         }
       </div>

@@ -95,17 +95,20 @@
   background-color: #f7f7f7;
   font-size: 14px;
   min-width: 35px;
-  height: 15px;
+  height: 21px;
 }
 
-.table-cell2 {
+.table-cell2{
   border: 1px solid #ddd;
-  padding: 10px 0;
+  padding: 3px 0;
   text-align: center;
   background-color: #f7f7f7;
   font-size: 14px;
-  min-width: 50px;
+  min-width: 25px;
+  height: 12px;
 }
+
+
 
 .icon{
   width:20px;
@@ -183,6 +186,7 @@
   margin: 0;
   vertical-align: middle;
   display: unset;
+  color: #000;
 }
 
 

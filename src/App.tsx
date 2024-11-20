@@ -13,21 +13,24 @@ import "./App.css";
 
 const symbols: string[] = ['🍒', '🍉', ];
 
+
 const SlotMachine = () => {
   const [spinning, setSpinning] = useState(false);
   const [isActive, setActive] = useState(false);
   const spinAudioRef = useRef<HTMLAudioElement | null>(null);
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(60);
   const [total, setTotal] = useState(10);
   const [matchingSymbol, setMatchingSymbol] = useState("");
   const [totalList, setTotalList] = useState<string[]>([]);
   const [showSymbols, setShowSymbols] = useState('');
   const [showTimer, setShowTimer] = useState(3);
   const [totalCount, setTotalCount] = useState(0);
+  const [totalCountM, setTotalCountM] = useState(0);
   const [matchingMessage, setMatchingMessage] = useState('');
   const [allList, setAllList] = useState<string[]>([]);
   const [nestedArray, setNestedArray] = useState<string[][]>([]);
+  const [isWithinTimeRange, setIsWithinTimeRange] = useState(false);
   const [spinAgain, setSpinAgain] = useState(true);
   const number = 10; 
   const range = Array.from({ length: number }, (_, i) => i + 1); 
@@ -56,7 +59,16 @@ const SlotMachine = () => {
     }
   };
 
+  const playAudio = () => {
+    if (spinAudioRef.current) {
+      spinAudioRef.current.play().catch((error) => {
+        console.error("Error playing audio:", error);
+      });
+    }
+  };
+
   const spinReels = () => { 
+    
     if(total===0){
       setCurrentPage(currentPage+1)
       setTotalList([])
@@ -66,14 +78,7 @@ const SlotMachine = () => {
     if (spinning) return;
     setSpinning(true);
     setMatchingMessage(''); 
-    
-    
-
-    if (spinAudioRef.current && !isMuted) {
-      spinAudioRef.current.currentTime = 0;
-      spinAudioRef.current.play();
-    }
-  
+    playAudio()
     setTimeout(() => {
       const newResult = [
         symbols[Math.floor(Math.random() * symbols.length)], 
@@ -92,11 +97,7 @@ const SlotMachine = () => {
           winAudioRef.current.currentTime = 0;
           winAudioRef.current.play();
         }
-        console.log(matchingSymbol+"old");
-        console.log(symbol1+'new')
-        console.log(tempArray+'tempArray')
-
-        
+       
         if (matchingSymbol) {
           if(matchingSymbol===symbol1){
             setNestedArray((prev) => {
@@ -118,39 +119,45 @@ const SlotMachine = () => {
           tempArray.push(symbol1); 
           setNestedArray((prev) => [...prev, tempArray]);
         }
-        console.log(nestedArray);
+        
   
         setMatchingSymbol(symbol1);
         setShowSymbols(symbol1);
         setTotalList(prevList => [...prevList,symbol1]);
         setAllList(prevList => [...prevList,symbol1])
-        
+        setTotalCountM(totalCountM+1)
+
       }
-  
+      setTimer(60);
+      setShowTimer(3)  
       setSpinning(false);
       if(total>=0){
           
         openModal()
         setTotal((prevTotal) => {
-          console.log("Previous Total:", prevTotal); 
+          
           return prevTotal - 1;
         });
       }
       else if(total===0){
-        closeModal()
+        // closeModal()
       }
       
 
       if (spinAudioRef.current && !isMuted) spinAudioRef.current.pause();
     }, 2000);
   };
-  
+
   useEffect(() => {
-    if(total===0){
-      closeModal()
-    }
-    else{
+    
+    const currentTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' });
+    const currentDate = new Date(currentTime);
+    const hours = currentDate.getHours();
+
+    if (hours >= 9 && hours < 21) {
+      openModal()
       if(showSymbols){
+      
         let countdown2: number;
         if (modalIsOpen && showTimer > 0) {
           countdown2 = window.setInterval(() => {
@@ -158,11 +165,10 @@ const SlotMachine = () => {
             setShowTimer((prev) => prev - 1);
           }, 1000);
         } else if (showTimer === 0) {
-          
           // closeModal();
           // spinReels()
           setShowSymbols("")
-          setTimer(10);
+          setTimer(60);
           let countdown: number;
           if (modalIsOpen && timer > 0) {
             countdown = window.setInterval(() => {
@@ -170,7 +176,7 @@ const SlotMachine = () => {
             }, 1000);
           } else if (timer === 0) {
             closeModal();
-            spinReels()
+            spinReels()            
           }
           return () => {
             clearInterval(countdown);
@@ -188,26 +194,86 @@ const SlotMachine = () => {
           }, 1000);
         } else if (timer === 0) {
           closeModal();
-          spinReels()
+          spinReels();
+          // setTimer(60);
+          // setShowTimer(3)  
         }
         return () => {
           clearInterval(countdown);
         };
       }
+    } else {
+      setIsWithinTimeRange(false);
     }
+  }, [modalIsOpen, timer,showTimer]); 
+
+  
+  // useEffect(() => {
+  //   openModal()
+  //   if(showSymbols){
+     
+  //     let countdown2: number;
+  //     if (modalIsOpen && showTimer > 0) {
+  //       countdown2 = window.setInterval(() => {
+          
+  //         setShowTimer((prev) => prev - 1);
+  //       }, 1000);
+  //     } else if (showTimer === 0) {
+        
+  //       // closeModal();
+  //       // spinReels()
+  //       setShowSymbols("")
+  //       setTimer(60);
+  //       let countdown: number;
+  //       if (modalIsOpen && timer > 0) {
+  //         countdown = window.setInterval(() => {
+  //           setTimer((prev) => prev - 1);
+  //         }, 1000);
+  //       } else if (timer === 0) {
+  //         closeModal();
+  //         spinReels()
+          
+  //       }
+  //       return () => {
+  //         clearInterval(countdown);
+  //       };
+  //     }
+  //     return () => {
+  //       clearInterval(countdown2);
+  //     };
+  //   }
+  //   else{
+  //     // alert("hello1")
+  //     let countdown: number;
+  //     if (modalIsOpen && timer > 0) {
+  //       countdown = window.setInterval(() => {
+  //         setTimer((prev) => prev - 1);
+  //       }, 1000);
+  //     } else if (timer === 0) {
+  //       closeModal();
+  //       spinReels();
+  //       // setTimer(60);
+  //       // setShowTimer(3)  
+  //     }
+  //     return () => {
+  //       clearInterval(countdown);
+  //     };
+  //   }
     
-  }, [modalIsOpen, timer,showTimer]);
+  // }, [modalIsOpen, timer,showTimer]);
 
   const openModal = () => {
+    
     setIsOpen(true);
-    setTimer(10);
-    setShowTimer(3)    
+    // setTimer(60);
+    // setShowTimer(3)    
     setActive(false);
     
   };
 
   const closeModal = () => {
     setIsOpen(false);
+    
   };
   
   const handleNext = () => {
@@ -236,6 +302,8 @@ const SlotMachine = () => {
         timer={timer}
         total={total}
         showTimer={showTimer}
+        TotalCount={totalCountM+1}
+        Result={totalCountM}
       />
 
       <div className='audioBox'>
@@ -251,9 +319,11 @@ const SlotMachine = () => {
         ))}
       </Reels>
   
-      <SpinButton spinAgain={spinAgain} spinning={spinning} modalIsOpen={modalIsOpen} spinReels={spinReels}/>
+      <SpinButton isWithinTimeRange={isWithinTimeRange } spinAgain={spinAgain} spinning={spinning} modalIsOpen={modalIsOpen} spinReels={spinReels}/>
       {/* {result.every((s) => s === result[0]) && !spinning && <Result>🎉 You Win! 🎉</Result>} */}
       <Icon/>
+
+      
 
       <div style={{width:1100,margin:'0 auto',display:'inline-block'}}>
         <TableColumns 

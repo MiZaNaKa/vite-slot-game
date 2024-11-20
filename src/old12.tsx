@@ -179,7 +179,7 @@ const SlotMachine = () => {
           
         openModal()
         setTotal((prevTotal) => {
-          console.log("Previous Total:", prevTotal); 
+         
           return prevTotal - 1;
         });
       }

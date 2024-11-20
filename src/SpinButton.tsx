@@ -6,6 +6,7 @@ interface SpinButtonProps {
   spinAgain: boolean;
   spinning: boolean;
   modalIsOpen: boolean;
+  isWithinTimeRange: boolean;  
   spinReels: () => void;
 }
 
@@ -13,19 +14,29 @@ const SpinButton: React.FC<SpinButtonProps> = ({
   spinAgain,
   spinning,
   modalIsOpen,
+  isWithinTimeRange,
   spinReels,
 }) => {
   return (
     <>
-      {spinAgain ? (
-        <Button onClick={spinReels} disabled={spinning || modalIsOpen}>
-          {spinning ? "Spinning..." : "Start"}
-        </Button>
-      ) : (
-        <p style={{ fontSize: 22, color: "red" }}>
-          {spinning ? "Spinning..." : ""}
-        </p>
-      )}
+      <div>
+        {isWithinTimeRange ?
+          <div>
+            {spinAgain ? (
+              <Button onClick={spinReels} disabled={spinning || modalIsOpen}>
+                {spinning ? "Spinning..." : "Start"}
+              </Button>
+            ) : (
+              <p style={{ fontSize: 22, color: "red" }}>
+                {spinning ? "Spinning..." : ""}
+              </p>
+            )}
+          </div>
+          :
+          null
+        }
+      </div>
+      
     </>
   );
 };
