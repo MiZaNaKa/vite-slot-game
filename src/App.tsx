@@ -12,7 +12,9 @@ import Loud from "./img/loud.png"
 import "./App.css";
 
 const symbols: string[] = ['🍒', '🍉', ];
-
+const table2No = 390; 
+const rows = 15; 
+const columns = Math.ceil(table2No / rows);
 
 const SlotMachine = () => {
   const [spinning, setSpinning] = useState(false);
@@ -35,7 +37,7 @@ const SlotMachine = () => {
   const number = 10; 
   const range = Array.from({ length: number }, (_, i) => i + 1); 
   const number1 = 60; 
-  const [isMuted, setIsMuted] = useState(false); 
+  const [isMuted, setIsMuted] = useState(true); 
   const [result, setResult] = useState([
     symbols[Math.floor(Math.random() * symbols.length)], 
     symbols[Math.floor(Math.random() * symbols.length)], 
@@ -59,6 +61,64 @@ const SlotMachine = () => {
     }
   };
 
+  useEffect(() => {
+    if (spinAudioRef.current) {
+      spinAudioRef.current.addEventListener('canplaythrough', () => {
+       
+      });
+      spinAudioRef.current.load(); 
+    }
+  }, []);
+  
+  useEffect(() => {
+    const KOREA_TIMEZONE = "Asia/Seoul";
+    const startHour = 9; 
+
+    const getKoreaTime = () => {
+      const now = new Date();
+      return new Date(
+        new Intl.DateTimeFormat("en-US", {
+          timeZone: KOREA_TIMEZONE,
+        }).format(now)
+      );
+    };
+
+    const resetState = () => {
+      window.location.reload();
+    };
+
+    const calculateNextReset = () => {
+      const now = getKoreaTime();
+      const nextReset = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        startHour,
+        0,
+        0,
+        0
+      );
+      if (now >= nextReset) {
+        nextReset.setDate(nextReset.getDate() + 1);
+      }
+      return nextReset.getTime() - now.getTime();
+    };
+
+    const timeUntilNextReset = calculateNextReset();
+    const timer = setTimeout(() => {
+      resetState();
+    }, timeUntilNextReset);
+
+    const interval = setInterval(() => {
+      resetState();
+    }, 24 * 60 * 60 * 1000);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, []);
+
   const playAudio = () => {
     if (spinAudioRef.current) {
       spinAudioRef.current.play().catch((error) => {
@@ -66,6 +126,18 @@ const SlotMachine = () => {
       });
     }
   };
+  const handleUserInteraction = () => {
+    if (spinAudioRef.current) {
+      spinAudioRef.current.play().catch((error) => {
+        console.error('Error playing audio:', error);
+      });
+    }
+  };
+  
+  useEffect(() => {
+    document.addEventListener('click', handleUserInteraction, { once: true });
+    return () => document.removeEventListener('click', handleUserInteraction);
+  }, []);
 
   const spinReels = () => { 
     
@@ -78,7 +150,27 @@ const SlotMachine = () => {
     if (spinning) return;
     setSpinning(true);
     setMatchingMessage(''); 
-    playAudio()
+    // playAudio()
+
+    if (spinAudioRef.current && !isMuted) {
+      spinAudioRef.current.muted = isMuted;
+      spinAudioRef.current.currentTime = 0;
+      spinAudioRef.current.src = '/sounds/slot-spin.mp3';
+      spinAudioRef.current.load();
+      
+      try {
+        spinAudioRef.current.play();
+      } catch (error) {
+        console.error("Audio playback failed:", error);
+      }
+    }
+
+    if (winAudioRef.current) {
+      winAudioRef.current.currentTime = 0;
+      winAudioRef.current.play();
+    }
+    
+  
     setTimeout(() => {
       const newResult = [
         symbols[Math.floor(Math.random() * symbols.length)], 
@@ -92,12 +184,6 @@ const SlotMachine = () => {
       if (symbol1 === symbol2 || symbol1 === symbol3 || symbol2 === symbol3) {
         setMatchingMessage('🎉 Two symbols are the same! 🎉');
   
-
-        if (winAudioRef.current) {
-          winAudioRef.current.currentTime = 0;
-          winAudioRef.current.play();
-        }
-       
         if (matchingSymbol) {
           if(matchingSymbol===symbol1){
             setNestedArray((prev) => {
@@ -119,7 +205,7 @@ const SlotMachine = () => {
           tempArray.push(symbol1); 
           setNestedArray((prev) => [...prev, tempArray]);
         }
-        
+        console.log(nestedArray);
   
         setMatchingSymbol(symbol1);
         setShowSymbols(symbol1);
@@ -135,7 +221,7 @@ const SlotMachine = () => {
           
         openModal()
         setTotal((prevTotal) => {
-          
+          console.log("Previous Total:", prevTotal); 
           return prevTotal - 1;
         });
       }
@@ -148,45 +234,23 @@ const SlotMachine = () => {
     }, 2000);
   };
 
+  
   useEffect(() => {
-    
-    const currentTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' });
-    const currentDate = new Date(currentTime);
-    const hours = currentDate.getHours();
-
-    if (hours >= 9 && hours < 21) {
-      openModal()
-      if(showSymbols){
-      
-        let countdown2: number;
-        if (modalIsOpen && showTimer > 0) {
-          countdown2 = window.setInterval(() => {
-            
-            setShowTimer((prev) => prev - 1);
-          }, 1000);
-        } else if (showTimer === 0) {
-          // closeModal();
-          // spinReels()
-          setShowSymbols("")
-          setTimer(60);
-          let countdown: number;
-          if (modalIsOpen && timer > 0) {
-            countdown = window.setInterval(() => {
-              setTimer((prev) => prev - 1);
-            }, 1000);
-          } else if (timer === 0) {
-            closeModal();
-            spinReels()            
-          }
-          return () => {
-            clearInterval(countdown);
-          };
-        }
-        return () => {
-          clearInterval(countdown2);
-        };
-      }
-      else{
+    openModal()
+    if(showSymbols){
+     
+      let countdown2: number;
+      if (modalIsOpen && showTimer > 0) {
+        countdown2 = window.setInterval(() => {
+          
+          setShowTimer((prev) => prev - 1);
+        }, 1000);
+      } else if (showTimer === 0) {
+        
+        // closeModal();
+        // spinReels()
+        setShowSymbols("")
+        setTimer(60);
         let countdown: number;
         if (modalIsOpen && timer > 0) {
           countdown = window.setInterval(() => {
@@ -194,73 +258,36 @@ const SlotMachine = () => {
           }, 1000);
         } else if (timer === 0) {
           closeModal();
-          spinReels();
-          // setTimer(60);
-          // setShowTimer(3)  
+          spinReels()
+          
         }
         return () => {
           clearInterval(countdown);
         };
       }
-    } else {
-      setIsWithinTimeRange(false);
+      return () => {
+        clearInterval(countdown2);
+      };
     }
-  }, [modalIsOpen, timer,showTimer]); 
-
-  
-  // useEffect(() => {
-  //   openModal()
-  //   if(showSymbols){
-     
-  //     let countdown2: number;
-  //     if (modalIsOpen && showTimer > 0) {
-  //       countdown2 = window.setInterval(() => {
-          
-  //         setShowTimer((prev) => prev - 1);
-  //       }, 1000);
-  //     } else if (showTimer === 0) {
-        
-  //       // closeModal();
-  //       // spinReels()
-  //       setShowSymbols("")
-  //       setTimer(60);
-  //       let countdown: number;
-  //       if (modalIsOpen && timer > 0) {
-  //         countdown = window.setInterval(() => {
-  //           setTimer((prev) => prev - 1);
-  //         }, 1000);
-  //       } else if (timer === 0) {
-  //         closeModal();
-  //         spinReels()
-          
-  //       }
-  //       return () => {
-  //         clearInterval(countdown);
-  //       };
-  //     }
-  //     return () => {
-  //       clearInterval(countdown2);
-  //     };
-  //   }
-  //   else{
-  //     // alert("hello1")
-  //     let countdown: number;
-  //     if (modalIsOpen && timer > 0) {
-  //       countdown = window.setInterval(() => {
-  //         setTimer((prev) => prev - 1);
-  //       }, 1000);
-  //     } else if (timer === 0) {
-  //       closeModal();
-  //       spinReels();
-  //       // setTimer(60);
-  //       // setShowTimer(3)  
-  //     }
-  //     return () => {
-  //       clearInterval(countdown);
-  //     };
-  //   }
+    else{
+      // alert("hello1")
+      let countdown: number;
+      if (modalIsOpen && timer > 0) {
+        countdown = window.setInterval(() => {
+          setTimer((prev) => prev - 1);
+        }, 1000);
+      } else if (timer === 0) {
+        closeModal();
+        spinReels();
+        // setTimer(60);
+        // setShowTimer(3)  
+      }
+      return () => {
+        clearInterval(countdown);
+      };
+    }
     
-  // }, [modalIsOpen, timer,showTimer]);
+  }, [modalIsOpen, timer,showTimer]);
 
   const openModal = () => {
     
