@@ -17,6 +17,7 @@ const SpinButton: React.FC<SpinButtonProps> = ({
   isWithinTimeRange,
   spinReels,
 }) => {
+  console.log({ spinAgain, spinning, modalIsOpen, isWithinTimeRange });
   return (
     <>
       <div>

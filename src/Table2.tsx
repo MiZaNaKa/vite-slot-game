@@ -1,11 +1,10 @@
 import React from "react";
 
 interface TableProps {
-  allList: string[];
   nestedArray: string[][];
 }
 
-const Table: React.FC<TableProps> = ({ allList, nestedArray }) => {
+const Table: React.FC<TableProps> = ({ nestedArray }) => {
   const number = 390; 
   const rows = 15;
   const columns = Math.ceil(number / rows); 
@@ -34,7 +33,7 @@ const Table: React.FC<TableProps> = ({ allList, nestedArray }) => {
       {tableData.map((row, rowIndex) => (
         <div className="table-row" key={`row-${rowIndex}`}>
           {row.map((cell, colIndex) => (
-            <div className="table-cell2" key={`cell-${rowIndex}-${colIndex}`}>
+            <div className="table-cell2" key={cell}>
               {adjustedNestedArray[colIndex] && adjustedNestedArray[colIndex][rowIndex] ? (
                 <div
                   style={{

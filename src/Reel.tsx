@@ -1,13 +1,12 @@
 import styled from 'styled-components';
-import { useSpring, animated, config } from '@react-spring/web';
+import { useSpring, animated, } from '@react-spring/web';
 interface ReelProps {
     targetSymbol: string;
     spinning: boolean;
     delay: number;
-    isActive:boolean
   }
   
-  const Reel = ({ targetSymbol, spinning, delay, isActive }: ReelProps) => {
+  const Reel = ({ targetSymbol, spinning, delay,  }: ReelProps) => {
     const symbols: string[] = ['🍒', '🍉', ];
     const loopDistance = symbols.length * 100; 
     const stopPosition = symbols.indexOf(targetSymbol) * 100;

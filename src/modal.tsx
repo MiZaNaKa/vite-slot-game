@@ -4,12 +4,11 @@ import Modal from 'react-modal';
 
 interface CustomModalProps {
   isOpen: boolean;
-  onRequestClose: () => void;
   showSymbols?: string;
   timer?: number;
-  total?: number;
+  
   TotalCount?: number
-  showTimer?: number;
+ 
   Result?: number;
   
 
@@ -38,11 +37,9 @@ const formattedDate = `${day}.${month}.${year}`;
 
 const CustomModal: React.FC<CustomModalProps> = ({
   isOpen,
-  onRequestClose,
   showSymbols,
   timer,
-  total,
-  showTimer,
+ 
   TotalCount,
   Result
 }) => {

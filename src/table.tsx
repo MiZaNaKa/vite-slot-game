@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import React from "react";
 
 interface TableProps {
@@ -6,7 +6,7 @@ interface TableProps {
 }
 
 const Table: React.FC<TableProps> = ({ allList }) => {
-  const [clear, setClear] = useState(false);
+  
   const number = 56; 
   // const number = 12;
   const array = Array.from({ length: number }, (_, i) => i);

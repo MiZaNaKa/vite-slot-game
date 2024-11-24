@@ -12,32 +12,30 @@ import Loud from "./img/loud.png"
 import "./App.css";
 
 const symbols: string[] = ['🍒', '🍉', ];
-const table2No = 390; 
-const rows = 15; 
-const columns = Math.ceil(table2No / rows);
+
+
 
 const SlotMachine = () => {
   const [spinning, setSpinning] = useState(false);
-  const [isActive, setActive] = useState(false);
+ 
   const spinAudioRef = useRef<HTMLAudioElement | null>(null);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [timer, setTimer] = useState(60);
   const [total, setTotal] = useState(10);
   const [matchingSymbol, setMatchingSymbol] = useState("");
-  const [totalList, setTotalList] = useState<string[]>([]);
+  // const [totalList, setTotalList] = useState<string[]>([]);
   const [showSymbols, setShowSymbols] = useState('');
   const [showTimer, setShowTimer] = useState(3);
   const [totalCount, setTotalCount] = useState(0);
   const [totalCountM, setTotalCountM] = useState(0);
-  const [matchingMessage, setMatchingMessage] = useState('');
+  // const [matchingMessage, setMatchingMessage] = useState('');
   const [allList, setAllList] = useState<string[]>([]);
   const [nestedArray, setNestedArray] = useState<string[][]>([]);
-  const [isWithinTimeRange, setIsWithinTimeRange] = useState(false);
-  const [spinAgain, setSpinAgain] = useState(true);
+  
   const number = 10; 
   const range = Array.from({ length: number }, (_, i) => i + 1); 
-  const number1 = 60; 
-  const [isMuted, setIsMuted] = useState(true); 
+
+  const [isMuted, setIsMuted] = useState(false); 
   const [result, setResult] = useState([
     symbols[Math.floor(Math.random() * symbols.length)], 
     symbols[Math.floor(Math.random() * symbols.length)], 
@@ -53,6 +51,12 @@ const SlotMachine = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const isWithinTimeRange=false
+  const spinAgain=true
+
+  // const [isWithinTimeRange, setIsWithinTimeRange] = useState(false);
+  // const [spinAgain, setSpinAgain] = useState(true);
 
   const toggleMute = () => {
     if (spinAudioRef.current) {
@@ -119,13 +123,13 @@ const SlotMachine = () => {
     };
   }, []);
 
-  const playAudio = () => {
-    if (spinAudioRef.current) {
-      spinAudioRef.current.play().catch((error) => {
-        console.error("Error playing audio:", error);
-      });
-    }
-  };
+  // const playAudio = () => {
+  //   if (spinAudioRef.current) {
+  //     spinAudioRef.current.play().catch((error) => {
+  //       console.error("Error playing audio:", error);
+  //     });
+  //   }
+  // };
   const handleUserInteraction = () => {
     if (spinAudioRef.current) {
       spinAudioRef.current.play().catch((error) => {
@@ -143,13 +147,13 @@ const SlotMachine = () => {
     
     if(total===0){
       setCurrentPage(currentPage+1)
-      setTotalList([])
+      // setTotalList([])
       setTotal(10)
       setTotalCount(allList.length)
     }
     if (spinning) return;
     setSpinning(true);
-    setMatchingMessage(''); 
+    // setMatchingMessage(''); 
     // playAudio()
 
     if (spinAudioRef.current && !isMuted) {
@@ -182,7 +186,7 @@ const SlotMachine = () => {
 
       const [symbol1, symbol2, symbol3] = newResult;
       if (symbol1 === symbol2 || symbol1 === symbol3 || symbol2 === symbol3) {
-        setMatchingMessage('🎉 Two symbols are the same! 🎉');
+        // setMatchingMessage('🎉 Two symbols are the same! 🎉');
   
         if (matchingSymbol) {
           if(matchingSymbol===symbol1){
@@ -209,7 +213,7 @@ const SlotMachine = () => {
   
         setMatchingSymbol(symbol1);
         setShowSymbols(symbol1);
-        setTotalList(prevList => [...prevList,symbol1]);
+        // setTotalList(prevList => [...prevList,symbol1]);
         setAllList(prevList => [...prevList,symbol1])
         setTotalCountM(totalCountM+1)
 
@@ -294,7 +298,7 @@ const SlotMachine = () => {
     setIsOpen(true);
     // setTimer(60);
     // setShowTimer(3)    
-    setActive(false);
+    // setActive(false);
     
   };
 
@@ -323,12 +327,11 @@ const SlotMachine = () => {
       {/* <button onClick={openModal}>Open Modal</button> */}
       <CustomModal
         isOpen={modalIsOpen}
-        onRequestClose={closeModal}
         showSymbols={showSymbols}
         // currentDate={currentDate}
         timer={timer}
-        total={total}
-        showTimer={showTimer}
+      
+       
         TotalCount={totalCountM+1}
         Result={totalCountM}
       />
@@ -342,7 +345,7 @@ const SlotMachine = () => {
       <audio ref={spinAudioRef} src="/sounds/slot-spin.mp3" preload="auto"/>
       <Reels>
         {result.map((symbol, i) => (
-          <Reel key={i} isActive={isActive} targetSymbol={symbol} spinning={spinning} delay={i * 100} />
+          <Reel key={i} targetSymbol={symbol} spinning={spinning} delay={i * 100} />
         ))}
       </Reels>
   
@@ -367,7 +370,7 @@ const SlotMachine = () => {
             <Table allList={allList}/>
           </div>
           <div className='boxRight'>
-            <Table2 allList={allList} nestedArray={nestedArray}/>
+            <Table2  nestedArray={nestedArray}/>
           </div>
         </div>
       </div>
