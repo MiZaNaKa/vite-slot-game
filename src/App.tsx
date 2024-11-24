@@ -323,7 +323,7 @@ const SlotMachine = () => {
 
   return (
     <Wrapper>
-      <Title>Slot Machine (Khin2 Thant)</Title>
+      <Title>Slot Machine (Khin2 Thant Test)</Title>
       {/* <button onClick={openModal}>Open Modal</button> */}
       <CustomModal
         isOpen={modalIsOpen}
