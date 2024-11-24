@@ -62,7 +62,7 @@ const SlotMachine = () => {
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [secondsLeft1, setSecondsLeft1] = useState(0);
   const [readySecondsLeft, setReadySecondsLeft] = useState(false);
-  const [koreaTime, setKoreaTime] = useState<string>("");
+  // const [koreaTime, setKoreaTime] = useState<string>("");
 
    //table
    const [currentPageTable1, setCurrentPageTable1] = useState(1);
@@ -79,8 +79,8 @@ const SlotMachine = () => {
 
 
   //Korea Time
-  const [koreaRealTime, setKoreaRealTime] = useState<string>("");
-  const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
+  // const [koreaRealTime, setKoreaRealTime] = useState<string>("");
+  // const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
 
 
 
@@ -244,15 +244,15 @@ const SlotMachine = () => {
    useEffect(() => {
     const calculateKoreaTimeAndSecondsLeft = () => {
       const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: "Asia/Seoul",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      };
-      const koreaTimeString = new Intl.DateTimeFormat("en-US", options).format(now);
-      setKoreaTime(koreaTimeString);
+      // const options: Intl.DateTimeFormatOptions = {
+      //   timeZone: "Asia/Seoul",
+      //   hour: "2-digit",
+      //   minute: "2-digit",
+      //   second: "2-digit",
+      //   hour12: false,
+      // };
+      // const koreaTimeString = new Intl.DateTimeFormat("en-US", options).format(now);
+      // setKoreaTime(koreaTimeString);
       const koreaSeconds = new Date(
         now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
       ).getSeconds();
@@ -266,15 +266,15 @@ const SlotMachine = () => {
   useEffect(() => {
     const calculateKoreaTimeAndSecondsLeft = () => {
       const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: "Asia/Seoul",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      };
-      const koreaTimeString = new Intl.DateTimeFormat("en-US", options).format(now);
-      setKoreaTime(koreaTimeString);
+      // const options: Intl.DateTimeFormatOptions = {
+      //   timeZone: "Asia/Seoul",
+      //   hour: "2-digit",
+      //   minute: "2-digit",
+      //   second: "2-digit",
+      //   hour12: false,
+      // };
+      // const koreaTimeString = new Intl.DateTimeFormat("en-US", options).format(now);
+      // setKoreaTime(koreaTimeString);
       const koreaSeconds = new Date(
         now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
       ).getSeconds();
@@ -315,36 +315,36 @@ const SlotMachine = () => {
   }, [allList]);
   
   //KOREA TIME
-  useEffect(() => {
-    const updateTime = () => {
-      const koreaTime = new Date().toLocaleTimeString("en-US", {
-        timeZone: "Asia/Seoul",
-        hour12: false, 
-      });
-      setKoreaRealTime(koreaTime);
-    };
+  // useEffect(() => {
+  //   const updateTime = () => {
+  //     const koreaTime = new Date().toLocaleTimeString("en-US", {
+  //       timeZone: "Asia/Seoul",
+  //       hour12: false, 
+  //     });
+  //     setKoreaRealTime(koreaTime);
+  //   };
 
-    updateTime(); 
-    const timer22 = setInterval(updateTime, 1000); 
+  //   updateTime(); 
+  //   const timer22 = setInterval(updateTime, 1000); 
 
-    return () => clearInterval(timer22); 
-  }, []);
+  //   return () => clearInterval(timer22); 
+  // }, []);
 
   
 
-  useEffect(() => {
-    const calculateRemainingSeconds = () => {
-      const now = new Date();
-      const currentSeconds = now.getSeconds();
-      const leftSeconds = 60 - currentSeconds;
-      setRemainingSeconds(leftSeconds);
-    };
+  // useEffect(() => {
+  //   const calculateRemainingSeconds = () => {
+  //     const now = new Date();
+  //     const currentSeconds = now.getSeconds();
+  //     const leftSeconds = 60 - currentSeconds;
+  //     setRemainingSeconds(leftSeconds);
+  //   };
 
-    calculateRemainingSeconds(); 
-    const timer1 = setInterval(calculateRemainingSeconds, 1000); 
+  //   calculateRemainingSeconds(); 
+  //   const timer1 = setInterval(calculateRemainingSeconds, 1000); 
 
-    return () => clearInterval(timer1); 
-  }, []);
+  //   return () => clearInterval(timer1); 
+  // }, []);
 
   useEffect(() => {
     if (spinAudioRef.current) {
@@ -625,8 +625,9 @@ const SlotMachine = () => {
 
   return (
     <Wrapper>
-      <Title>Slot Machine (Khin2 Thant) {secondsLeft}
-        <p>{koreaRealTime}  /  {remainingSeconds} seconds {koreaTime}</p>
+      <Title>Slot Machine (Khin2 Thant) 
+        {/* {secondsLeft}
+        <p>{koreaRealTime}  /  {remainingSeconds} seconds {koreaTime}</p> */}
       </Title>
       
       {/* <button onClick={openModal}>Open Modal</button> */}
