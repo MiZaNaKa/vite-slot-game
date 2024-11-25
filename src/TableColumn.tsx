@@ -36,7 +36,7 @@ const TableColumns: React.FC<TableColumnsProps> = ({ data, currentData,currentPa
                 borderBottom: '1px solid #000',
                 borderRight: value === 10 ? '1px solid #000' : '1px solid #fff'
             }}>
-              <div style={{borderBottom:'1px solid #000',height:50}}>{currentData[index] ? <h3 className="fontCB">{totalCount+index+1}</h3> : <h3 className="fontCB">-</h3>} </div>
+              <div style={{borderBottom:'1px solid #000',height:50}}>{currentData[index] ? <h3 className="fontCB">{totalCount+index}</h3> : <h3 className="fontCB">-</h3>} </div>
               <div style={{height:70}}>
                 <p className="fontCR">{currentData[index] ? <h3 className="fontCB">{currentData[index]}</h3> : <h3 className="fontCB">-</h3>} </p>
                 {currentData[index] ?
