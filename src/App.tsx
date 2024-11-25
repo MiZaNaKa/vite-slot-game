@@ -99,11 +99,21 @@ const SlotMachine = () => {
  
   
   useEffect(() => {
+    console.log(currentData)
+    console.log(currentPage)
+    console.log(totalPages)
     if (currentData.length > 0  && currentPage === totalPages) {
       setTotalCountM((data.length - currentData.length)+1);
       setTotalCount((data.length - currentData.length)+1);      
     }
   }, [currentData, data]);
+
+
+  useEffect(() => {
+    console.log(currentPage)
+    console.log(currentData)
+    console.log(totalPages)
+  }, [currentPage, currentData]);
 
   
   
@@ -282,18 +292,6 @@ const SlotMachine = () => {
     };
 
     calculateKoreaTimeAndSecondsLeft();
-    // if(secondsLeft1>0){
-    //   if(secondsLeft1>3){
-    //     setTimer(secondsLeft1-3);
-    //   }
-    //   else{
-    //     setTimer(0);
-    //   }
-    // }
-    // else{
-    //   setTimer(52)
-    // }
-
     if(secondsLeft1>0){
       setTimer(secondsLeft1);
     }
@@ -303,16 +301,7 @@ const SlotMachine = () => {
     
   }, [finishedLoop,readySecondsLeft]);
 
-  useEffect(() => {
-    const hellokitty = ['a', 'b', 'c', 'd', 'e'];
-    localStorage.setItem("hellokitty1", JSON.stringify(hellokitty));
-    const hellokittyResult = localStorage.getItem("hellokitty1");
-    if (hellokittyResult) {
-      const myo = JSON.parse(hellokittyResult);
-      console.log(myo); 
-      console.log(myo); 
-    }
-  }, [allList]);
+ 
   
   //KOREA TIME
   useEffect(() => {
@@ -325,8 +314,7 @@ const SlotMachine = () => {
     };
 
     updateTime(); 
-    const timer22 = setInterval(updateTime, 1000); 
-
+    const timer22 = setInterval(updateTime, 1000);
     return () => clearInterval(timer22); 
   }, []);
 
@@ -438,12 +426,12 @@ const SlotMachine = () => {
       setCurrentPageTable2(currentPageTable2+1)
     }
     
-    if(total===0){
-      // setCurrentPage(currentPage+1)
-      // setTotalList([])
-      setTotal(10)
-      setTotalCount(allList.length)
-    }
+    // if(total===0){
+    //   // setCurrentPage(currentPage+1)
+    //   // setTotalList([])
+    //   setTotal(10)
+    //   setTotalCount(allList.length)
+    // }
     if (spinning) return;
     setSpinning(true);
     // setMatchingMessage(''); 
@@ -546,9 +534,15 @@ const SlotMachine = () => {
           setShowTimer((prev) => prev - 1);
         }, 1000);
       } else if (showTimer === 0) {
-        
-        // closeModal();
-        // spinReels()
+        const hellokittyResult = localStorage.getItem("allList");
+        if (hellokittyResult) {
+          const myo = JSON.parse(hellokittyResult);
+          if(myo.length===1439){
+            localStorage.removeItem('allList'); 
+            window.location.reload();
+           
+          }
+        }
         setShowSymbols("")
         // setTimer(52);
         setTimer(secondsLeft);
@@ -627,7 +621,10 @@ const SlotMachine = () => {
     <Wrapper>
       <Title>Slot Machine (Khin2 Thant) 
         {secondsLeft}
-        <p>{koreaRealTime}  /  {remainingSeconds} seconds {koreaTime}</p>
+        <p>{koreaRealTime}  /  {remainingSeconds} seconds {koreaTime}
+          count is {count}
+        </p> current Page {currentPage}
+        total page {totalPages}
       </Title>
       
       {/* <button onClick={openModal}>Open Modal</button> */}
@@ -659,8 +656,6 @@ const SlotMachine = () => {
       <SpinButton isWithinTimeRange={isWithinTimeRange } spinAgain={spinAgain} spinning={spinning} modalIsOpen={modalIsOpen} spinReels={spinReels}/>
       {/* {result.every((s) => s === result[0]) && !spinning && <Result>🎉 You Win! 🎉</Result>} */}
       <Icon/>
-
-      
 
       <div style={{width:1100,margin:'0 auto',display:'inline-block'}}>
         <TableColumns 
