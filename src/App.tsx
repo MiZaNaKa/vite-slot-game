@@ -625,7 +625,7 @@ const SlotMachine = () => {
           count is {count}
         </p> current Page {currentPage}
         total page {totalPages}
-        total {allList.length}
+        
       </Title>
       
       {/* <button onClick={openModal}>Open Modal</button> */}
