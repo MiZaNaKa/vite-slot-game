@@ -489,8 +489,8 @@ const SlotMachine = () => {
           }
         }
         setShowSymbols("")
-        if(secondsLeft>4){
-          setTimer(secondsLeft-4);
+        if(secondsLeft>6){
+          setTimer(secondsLeft-6);
         }else{
           setTimer(0);
         }
