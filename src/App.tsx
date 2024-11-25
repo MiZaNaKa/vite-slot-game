@@ -12,11 +12,6 @@ import Loud from "./img/loud.png"
 import "./App.css";
 
 const symbols: string[] = ['🍒', '🍉', ];
-// const table2No = 390; 
-// const rows = 15; 
-
-
-
 const groupArray = (array: string[]): string[][] => {
   if (array.length === 0) return [];
 
@@ -39,56 +34,31 @@ const groupArray = (array: string[]): string[][] => {
 
 const SlotMachine = () => {
   const [spinning, setSpinning] = useState(false);
-  // const [isActive, setActive] = useState(false);
   const spinAudioRef = useRef<HTMLAudioElement | null>(null);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [timer, setTimer] = useState(52);
   const [total, setTotal] = useState(10);
   const [matchingSymbol, setMatchingSymbol] = useState("");
-  // const [totalList, setTotalList] = useState<string[]>([]);
   const [showSymbols, setShowSymbols] = useState('');
   const [showTimer, setShowTimer] = useState(3);
   const [totalCount, setTotalCount] = useState(0);
   const [totalCountM, setTotalCountM] = useState(0);
-  // const [matchingMessage, setMatchingMessage] = useState('');
   const [allList, setAllList] = useState<string[]>([]);
   const [nestedArray, setNestedArray] = useState<string[][]>([]);
-  
   const [count, setCount] = useState(0);
- 
+  const [currentCount, setCurrentCount] = useState(0);
   const [finishedLoop, setFinishedLoop] = useState(false);
-  // const [action, setAction] = useState(false);
-
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [secondsLeft1, setSecondsLeft1] = useState(0);
   const [readySecondsLeft, setReadySecondsLeft] = useState(false);
   const [koreaTime, setKoreaTime] = useState<string>("");
-
-   //table
-   const [currentPageTable1, setCurrentPageTable1] = useState(1);
-   const [currentPageTable2, setCurrentPageTable2] = useState(1);
-
-  //pagination
-  
-  // const [itemsPerPage, setItemsPerPage] = useState(10);
-  // const [totalPages, setTotalPages] = useState(0);
-  // const [currentData, setCurrentData] =  useState<string[]>([]);
-
-  //lefttime
-
-
-
-  //Korea Time
+  const [currentPageTable1, setCurrentPageTable1] = useState(1);
+  const [currentPageTable2, setCurrentPageTable2] = useState(1);
   const [koreaRealTime, setKoreaRealTime] = useState<string>("");
   const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
-
-
-
   const [currentPage, setCurrentPage] = useState(1);
-
   const isWithinTimeRange=false
   const spinAgain=true
-
   const data = allList || [];
   const itemsPerPage = 10;
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -97,11 +67,8 @@ const SlotMachine = () => {
     currentPage * itemsPerPage
   );
  
-  
   useEffect(() => {
-    console.log(currentData)
-    console.log(currentPage)
-    console.log(totalPages)
+    
     if (currentData.length > 0  && currentPage === totalPages) {
       setTotalCountM((data.length - currentData.length)+1);
       setTotalCount((data.length - currentData.length)+1);      
@@ -109,35 +76,20 @@ const SlotMachine = () => {
   }, [currentData, data]);
 
 
-  useEffect(() => {
-    console.log(currentPage)
-    console.log(currentData)
-    console.log(totalPages)
-  }, [currentPage, currentData]);
-
-  
-  
-
   const itemsPerPageTable1 = 66;
-  // const totalPagesTable1 = Math.ceil(data.length / itemsPerPageTable1);
   const Table1 = data.slice(
     (currentPageTable1 - 1) * itemsPerPageTable1,
     currentPageTable1 * itemsPerPageTable1
   );
 
   const itemsPerPageTable2 = 24;
-  // const totalPagesTable2 = Math.ceil(nestedArray.length / itemsPerPageTable1);
   const Table2R = nestedArray.slice(
     (currentPageTable2 - 1) * itemsPerPageTable2,
     currentPageTable2 * itemsPerPageTable2
   );
 
-
-  
-
   const number = 10; 
   const range = Array.from({ length: number }, (_, i) => i + 1); 
-  // const number1 = 60; 
   const [isMuted, setIsMuted] = useState(false); 
   const [result, setResult] = useState([
     symbols[Math.floor(Math.random() * symbols.length)], 
@@ -154,6 +106,30 @@ const SlotMachine = () => {
       setIsMuted(!isMuted);
     }
   };
+
+  useEffect(() => {
+    const calculateCount = () => {
+      const koreaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" });
+      const now = new Date(koreaTime);
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      const totalMinutesToday = currentHour * 60 + currentMinute;
+      const startMinutes = 9 * 60;
+
+      let count = 0;
+      if (totalMinutesToday >= startMinutes) {
+        count = totalMinutesToday - startMinutes;
+      } else {
+        count = 1440 - (startMinutes - totalMinutesToday);
+      }
+      setCurrentCount(count);
+    };
+    calculateCount();
+   
+    const interval = setInterval(calculateCount, 60000);
+    return () => clearInterval(interval);
+  }, [remainingSeconds]);
+
 
   useEffect(() => {
     const calculateCount = () => {
@@ -248,7 +224,6 @@ const SlotMachine = () => {
     const randomIndex = Math.floor(Math.random() * symbols.length);
     return symbols[randomIndex];
   };
-  
 
   // secondsLeft
    useEffect(() => {
@@ -293,7 +268,11 @@ const SlotMachine = () => {
 
     calculateKoreaTimeAndSecondsLeft();
     if(secondsLeft1>0){
-      setTimer(secondsLeft1);
+      if(secondsLeft1>5){
+        setTimer(secondsLeft1-5);
+      }else{
+        setTimer(0);
+      }
     }
     else{
       setTimer(52)
@@ -302,7 +281,6 @@ const SlotMachine = () => {
   }, [finishedLoop,readySecondsLeft]);
 
  
-  
   //KOREA TIME
   useEffect(() => {
     const updateTime = () => {
@@ -319,7 +297,6 @@ const SlotMachine = () => {
   }, []);
 
   
-
   useEffect(() => {
     const calculateRemainingSeconds = () => {
       const now = new Date();
@@ -358,6 +335,9 @@ const SlotMachine = () => {
 
     const resetState = () => {
       localStorage.removeItem('allList');
+    };
+
+    const windowReload = () => {
       window.location.reload();
     };
 
@@ -381,6 +361,7 @@ const SlotMachine = () => {
     const timeUntilNextReset = calculateNextReset();
     const timerKorea = setTimeout(() => {
       resetState();
+      windowReload()
     }, timeUntilNextReset);
 
     const intervalKorea = setInterval(() => {
@@ -393,13 +374,6 @@ const SlotMachine = () => {
     };
   }, []);
 
-  // const playAudio = () => {
-  //   if (spinAudioRef.current) {
-  //     spinAudioRef.current.play().catch((error) => {
-  //       console.error("Error playing audio:", error);
-  //     });
-  //   }
-  // };
   const handleUserInteraction = () => {
     if (spinAudioRef.current) {
       spinAudioRef.current.play().catch((error) => {
@@ -426,23 +400,14 @@ const SlotMachine = () => {
       setCurrentPageTable2(currentPageTable2+1)
     }
     
-    // if(total===0){
-    //   // setCurrentPage(currentPage+1)
-    //   // setTotalList([])
-    //   setTotal(10)
-    //   setTotalCount(allList.length)
-    // }
     if (spinning) return;
     setSpinning(true);
-    // setMatchingMessage(''); 
-    // playAudio()
-
     if (spinAudioRef.current && !isMuted) {
       spinAudioRef.current.muted = isMuted;
       spinAudioRef.current.currentTime = 0;
       spinAudioRef.current.src = '/sounds/slot-spin.mp3';
       spinAudioRef.current.load();
-      // Try to play audio and catch any errors if they occur
+      
       try {
         spinAudioRef.current.play();
       } catch (error) {
@@ -455,7 +420,6 @@ const SlotMachine = () => {
       winAudioRef.current.play();
     }
     
-  
     setTimeout(() => {
       const newResult = [
         symbols[Math.floor(Math.random() * symbols.length)], 
@@ -493,29 +457,21 @@ const SlotMachine = () => {
        
         setMatchingSymbol(symbol1);
         setShowSymbols(symbol1);
-        // setTotalList(prevList => [...prevList,symbol1]);
         setAllList(prevList => [...prevList,symbol1])
         setTotalCountM(totalCountM+1)
         localStorage.setItem("allList", JSON.stringify(allList));
       }
       
-      setTimer(52)
-      // setSecondsLeft(0)
+      setTimer(secondsLeft)
       setShowTimer(3)  
       setSpinning(false);
       if(total>=0){
-          
         openModal()
         setTotal((prevTotal) => {
           console.log("Previous Total:", prevTotal); 
           return prevTotal - 1;
         });
       }
-      else if(total===0){
-        // closeModal()
-      }
-      
-
       if (spinAudioRef.current && !isMuted) spinAudioRef.current.pause();
     }, 2000);
   };
@@ -537,15 +493,19 @@ const SlotMachine = () => {
         const hellokittyResult = localStorage.getItem("allList");
         if (hellokittyResult) {
           const myo = JSON.parse(hellokittyResult);
-          if(myo.length===1439){
+          if(myo.length===1440){
             localStorage.removeItem('allList'); 
             window.location.reload();
            
           }
         }
         setShowSymbols("")
-        // setTimer(52);
-        setTimer(secondsLeft);
+        if(secondsLeft>4){
+          setTimer(secondsLeft-4);
+        }else{
+          setTimer(0);
+        }
+        
         let countdown: number;
         if (modalIsOpen && timer > 0) {
           countdown = window.setInterval(() => {
@@ -565,7 +525,6 @@ const SlotMachine = () => {
       };
     }
     else{
-      // alert("hello1")
       if(!readySecondsLeft){
         setReadySecondsLeft(true)
       }
@@ -577,8 +536,6 @@ const SlotMachine = () => {
       } else if (timer === 0) {
         closeModal();
         spinReels();
-        // setTimer(52);
-        // setShowTimer(3)  
       }
       return () => {
         clearInterval(countdown);
@@ -587,56 +544,43 @@ const SlotMachine = () => {
   }, [modalIsOpen, timer,showTimer,finishedLoop]);
 
   const openModal = () => {
-    
     setIsOpen(true);
-    // setTimer(52);
-    // setShowTimer(3)    
-    // setActive(false);
   };
 
   const closeModal = () => {
-    setIsOpen(false);
-    
+    setIsOpen(false);    
   };
   
-  const handleNext = () => {
-    
+  const handleNext = () => {    
     if (currentPage < totalPages) {
       setCurrentPage((prev) => prev + 1);
     }
     setTotalCount(totalCount+10)
   };
 
-  const handlePrevious = () => {
-    
+  const handlePrevious = () => {    
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
-    }
-    
+    }    
     setTotalCount(totalCount-10)
     // setAction(true)
   };
 
   return (
     <Wrapper>
-      <Title>Slot Machine (Khin2 Thant) 
-        {secondsLeft}
-        <p>{koreaRealTime}  /  {remainingSeconds} seconds {koreaTime}
-          count is {count}
-        </p> current Page {currentPage}
-        total page {totalPages}
-        
+      <Title>
+        {/* Slot Machine (Khin2 Thant)  */}
+        {/* {secondsLeft} , */}
+        <p> {koreaRealTime}  /  {remainingSeconds} , 
+          count is {currentCount} ,
+        </p> all length {allList.length}
       </Title>
       
       {/* <button onClick={openModal}>Open Modal</button> */}
       <CustomModal
         isOpen={modalIsOpen}
-        // onRequestClose={closeModal}
         showSymbols={showSymbols}
-        // currentDate={currentDate}
         timer={timer}
-        // total={total}
-        // showTimer={showTimer}
         TotalCount={allList.length+1}
         Result={allList.length}
       />
