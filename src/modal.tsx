@@ -6,12 +6,8 @@ interface CustomModalProps {
   isOpen: boolean;
   showSymbols?: string;
   timer?: number;
-  
   TotalCount?: number
- 
   Result?: number;
-  
-
 }
 
 const customStyles = {
