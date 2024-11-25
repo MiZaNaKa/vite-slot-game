@@ -361,7 +361,7 @@ const SlotMachine = () => {
       clearTimeout(timerKorea);
       clearInterval(intervalKorea);
     };
-  }, []);
+  }, [allList]);
 
   const handleUserInteraction = () => {
     if (spinAudioRef.current) {
@@ -489,8 +489,8 @@ const SlotMachine = () => {
           }
         }
         setShowSymbols("")
-        if(secondsLeft>6){
-          setTimer(secondsLeft-6);
+        if(secondsLeft>4){
+          setTimer(secondsLeft-4);
         }else{
           setTimer(0);
         }
