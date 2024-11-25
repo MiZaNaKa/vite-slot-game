@@ -194,12 +194,6 @@ const SlotMachine = () => {
             setNestedArray(nestedArray)           
           }
 
-          
-          
-          // const dividend = count;
-          // const divisor = 10;
-          // const result = Math.floor(dividend / divisor);
-    
           const totalPages = Math.ceil(allList.length / itemsPerPage);
           const totalPagesTable1 = Math.ceil(allList.length / itemsPerPageTable1);
           const totalPagesTable2 = Math.ceil(nestedArray.length / itemsPerPageTable2);
@@ -207,17 +201,12 @@ const SlotMachine = () => {
           setCurrentPage(totalPages);
           setCurrentPageTable1(totalPagesTable1)
           setCurrentPageTable2(totalPagesTable2)
-          // setTotalPages(totalPages);
-          
-          // setCurrentData(currentData);
           setFinishedLoop(true);
           
         }
     };
     
     executeLoop();
-    // const interval = setInterval(calculateCount, 60000);
-    // return () => clearInterval(interval);
   }, [count,finishedLoop]);
   
   const chooseRandom = () => {
@@ -621,6 +610,7 @@ const SlotMachine = () => {
           </div>
         </div>
       </div>
+      <p>{koreaTime}</p>
     </Wrapper>
   );
 };
