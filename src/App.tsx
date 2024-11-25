@@ -156,7 +156,7 @@ const SlotMachine = () => {
             const randomValue = chooseRandom();
             tempAllList.push(randomValue);
           }
-          localStorage.removeItem('allList');
+          // localStorage.removeItem('allList');
           // var total=[]
           const localStorageAllList = localStorage.getItem("allList");
           
