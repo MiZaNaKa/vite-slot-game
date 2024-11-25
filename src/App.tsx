@@ -439,7 +439,7 @@ const SlotMachine = () => {
     }
     
     if(total===0){
-      setCurrentPage(currentPage+1)
+      // setCurrentPage(currentPage+1)
       // setTotalList([])
       setTotal(10)
       setTotalCount(allList.length)
