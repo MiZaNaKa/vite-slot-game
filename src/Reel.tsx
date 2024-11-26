@@ -23,7 +23,6 @@ interface ReelProps {
           await next({ y: -stopPosition, config: { tension: 100, friction: 40 } });
         }
       },
-      // reset: true,
       delay,
     });
   

@@ -98,16 +98,6 @@ const SlotMachine = () => {
     }
   }, [currentData, data]);
 
-  useEffect(() => {
-    const hellokittyResult = localStorage.getItem("allList");
-    if (hellokittyResult) {
-      const myo = JSON.parse(hellokittyResult);
-      // if(myo.length===24){
-      //  alert("finished")
-      // }
-    }
-  }, [allList]);
-
   //remainingSeconds
   useEffect(() => {
     const calculateCount = () => {
@@ -574,14 +564,15 @@ const SlotMachine = () => {
   return (
     <Wrapper>
       <Title>
-        {/* Slot Machine (Khin2 Thant)  */}
-        {/* {secondsLeft} , */}
+        Slot Machine (Khin2 Thant) 
+        
         <p> {koreaRealTime}  /  {remainingSeconds} , 
           count is {currentCount} ,
-        </p> all length {allList.length}
+        </p> 
+        
       </Title>
       
-      {/* <button onClick={openModal}>Open Modal</button> */}
+      
       <CustomModal
         isOpen={modalIsOpen}
         showSymbols={showSymbols}
@@ -604,7 +595,7 @@ const SlotMachine = () => {
       </Reels>
   
       <SpinButton isWithinTimeRange={isWithinTimeRange } spinAgain={spinAgain} spinning={spinning} modalIsOpen={modalIsOpen} spinReels={spinReels}/>
-      {/* {result.every((s) => s === result[0]) && !spinning && <Result>🎉 You Win! 🎉</Result>} */}
+      
       <Icon/>
 
       <div style={{width:1100,margin:'0 auto',display:'inline-block'}}>

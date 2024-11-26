@@ -8,15 +8,11 @@ interface TableProps {
 const Table: React.FC<TableProps> = ({ allList }) => {
   
   const number = 56; 
-  // const number = 12;
   const array = Array.from({ length: number }, (_, i) => i);
-  
-  
   var Data=allList
   var skip=0
   const rows1: number = 7;
   
-
   if (number === allList.length) {
     Data = [];
   } else if (number < allList.length) {
@@ -50,7 +46,6 @@ const Table: React.FC<TableProps> = ({ allList }) => {
                 <div style={{width:18,height:18,backgroundColor:Data[cell]==='🍒'? 'red':'green',margin:'0 auto',borderRadius:15}}>
                   <p className="symbolT">{Data[cell]==='🍒'? "C":"W"}</p>
                   <div>
-                  {/* <p className="symbolT">{cell}</p> */}
                   </div>
                 </div>
                 :

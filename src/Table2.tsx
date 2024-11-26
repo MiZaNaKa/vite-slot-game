@@ -45,10 +45,6 @@ const Table: React.FC<TableProps> = ({ nestedArray }) => {
                     borderRadius: "50%",
                   }}
                 >
-                  {/* <p className="symbolT">{colIndex}</p>
-                  <div>
-                    <p className="symbolT">{adjustedNestedArray[colIndex][rowIndex]}</p>
-                  </div> */}
                 </div>
               ) : null}
             </div>

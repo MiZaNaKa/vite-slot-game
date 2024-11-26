@@ -15,8 +15,6 @@ const TableColumns: React.FC<TableColumnsProps> = ({ data, currentData,currentPa
   totalCount,
   handlePrevious,
   handleNext, }) => {
-  
-
   return (
     <div>
         <div className="paginationBox">
