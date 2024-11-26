@@ -565,11 +565,6 @@ const SlotMachine = () => {
     <Wrapper>
       <Title>
         Slot Machine (Khin2 Thant) 
-        
-        <p> {koreaRealTime}  /  {remainingSeconds} , 
-          count is {currentCount} ,
-        </p> 
-        
       </Title>
       
       
@@ -617,7 +612,10 @@ const SlotMachine = () => {
           </div>
         </div>
       </div>
-      <p>{koreaTime}</p>
+      <p className="fontCR"> {koreaRealTime}  /  {remainingSeconds} , 
+          count is {currentCount} ,
+        </p> 
+      <p className="fontCR"> {koreaTime}</p>
     </Wrapper>
   );
 };
