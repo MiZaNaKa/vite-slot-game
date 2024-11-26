@@ -251,8 +251,8 @@ const SlotMachine = () => {
 
     calculateKoreaTimeAndSecondsLeft();
     if(secondsLeft1>0){
-      if(secondsLeft1>5){
-        setTimer(secondsLeft1-5);
+      if(secondsLeft1>=4){
+        setTimer(secondsLeft1-4);
       }else{
         setTimer(0);
       }
@@ -387,7 +387,7 @@ const SlotMachine = () => {
           }
         }
         setShowSymbols("")
-        if(secondsLeft>5){
+        if(secondsLeft>=5){
           setTimer(secondsLeft-5);
         }else{
           setTimer(0);
