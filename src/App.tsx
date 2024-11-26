@@ -67,15 +67,6 @@ const SlotMachine = () => {
     currentPage * itemsPerPage
   );
  
-  useEffect(() => {
-    
-    if (currentData.length > 0  && currentPage === totalPages) {
-      setTotalCountM((data.length - currentData.length)+1);
-      setTotalCount((data.length - currentData.length)+1);      
-    }
-  }, [currentData, data]);
-
-
   const itemsPerPageTable1 = 66;
   const Table1 = data.slice(
     (currentPageTable1 - 1) * itemsPerPageTable1,
@@ -97,16 +88,27 @@ const SlotMachine = () => {
     symbols[Math.floor(Math.random() * symbols.length)], 
   ]); 
   const winAudioRef = useRef<HTMLAudioElement | null>(null); 
-  
   let tempArray: string[] = [];
 
-  const toggleMute = () => {
-    if (spinAudioRef.current) {
-      spinAudioRef.current.muted = !isMuted; 
-      setIsMuted(!isMuted);
+  //setTotalCountM
+   useEffect(() => {
+    if (currentData.length > 0  && currentPage === totalPages) {
+      setTotalCountM((data.length - currentData.length)+1);
+      setTotalCount((data.length - currentData.length)+1);      
     }
-  };
+  }, [currentData, data]);
 
+  useEffect(() => {
+    const hellokittyResult = localStorage.getItem("allList");
+    if (hellokittyResult) {
+      const myo = JSON.parse(hellokittyResult);
+      // if(myo.length===24){
+      //  alert("finished")
+      // }
+    }
+  }, [allList]);
+
+  //remainingSeconds
   useEffect(() => {
     const calculateCount = () => {
       const koreaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" });
@@ -130,7 +132,7 @@ const SlotMachine = () => {
     return () => clearInterval(interval);
   }, [remainingSeconds]);
 
-
+  //count& loop
   useEffect(() => {
     const calculateCount = () => {
       const koreaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" });
@@ -156,8 +158,14 @@ const SlotMachine = () => {
             const randomValue = chooseRandom();
             tempAllList.push(randomValue);
           }
-          // localStorage.removeItem('allList');
-          // var total=[]
+
+          const getOldItem = localStorage.getItem("allList");
+          if(getOldItem){
+            var checkStorage=JSON.parse(getOldItem)
+            if(count < checkStorage.length){
+              localStorage.removeItem('allList');
+            }
+          }
           const localStorageAllList = localStorage.getItem("allList");
           
           if(localStorageAllList){
@@ -209,11 +217,6 @@ const SlotMachine = () => {
     executeLoop();
   }, [count,finishedLoop]);
   
-  const chooseRandom = () => {
-    const randomIndex = Math.floor(Math.random() * symbols.length);
-    return symbols[randomIndex];
-  };
-
   // secondsLeft
    useEffect(() => {
     const calculateKoreaTimeAndSecondsLeft = () => {
@@ -237,6 +240,7 @@ const SlotMachine = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // secondsLeft2
   useEffect(() => {
     const calculateKoreaTimeAndSecondsLeft = () => {
       const now = new Date();
@@ -269,7 +273,6 @@ const SlotMachine = () => {
     
   }, [finishedLoop,readySecondsLeft]);
 
- 
   //KOREA TIME
   useEffect(() => {
     const updateTime = () => {
@@ -285,7 +288,7 @@ const SlotMachine = () => {
     return () => clearInterval(timer22); 
   }, []);
 
-  
+  //remainingSeconds
   useEffect(() => {
     const calculateRemainingSeconds = () => {
       const now = new Date();
@@ -300,6 +303,7 @@ const SlotMachine = () => {
     return () => clearInterval(timer1); 
   }, []);
 
+  //Audio
   useEffect(() => {
     if (spinAudioRef.current) {
       spinAudioRef.current.addEventListener('canplaythrough', () => {
@@ -309,6 +313,7 @@ const SlotMachine = () => {
     }
   }, []);
   
+  //ResetTime
   useEffect(() => {
     const KOREA_TIMEZONE = "Asia/Seoul";
     const startHour = 9; 
@@ -361,20 +366,101 @@ const SlotMachine = () => {
       clearTimeout(timerKorea);
       clearInterval(intervalKorea);
     };
-  }, [allList]);
-
-  const handleUserInteraction = () => {
-    if (spinAudioRef.current) {
-      spinAudioRef.current.play().catch((error) => {
-        console.error('Error playing audio:', error);
-      });
-    }
-  };
+  }, []);
   
+  //AudioCheck
   useEffect(() => {
     document.addEventListener('click', handleUserInteraction, { once: true });
     return () => document.removeEventListener('click', handleUserInteraction);
   }, []);
+
+  //OpenModal
+  useEffect(() => {
+
+    if(!modalIsOpen){
+      openModal()
+    }
+    
+    if(showSymbols){     
+      let countdown2: number;
+      if (modalIsOpen && showTimer > 0) {
+        countdown2 = window.setInterval(() => {
+          setShowTimer((prev) => prev - 1);
+        }, 1000);
+      } else if (showTimer === 0) {
+        const hellokittyResult = localStorage.getItem("allList");
+        if (hellokittyResult) {
+          const myo = JSON.parse(hellokittyResult);
+          if(myo.length===1439){
+            localStorage.removeItem('allList'); 
+            window.location.reload();           
+          }
+        }
+        setShowSymbols("")
+        if(secondsLeft>5){
+          setTimer(secondsLeft-5);
+        }else{
+          setTimer(0);
+        }
+        
+        let countdown: number;
+        if (modalIsOpen && timer > 0) {
+          countdown = window.setInterval(() => {
+            setTimer((prev) => prev - 1);
+          }, 1000);
+        } else if (timer === 0) {
+          closeModal();
+          spinReels()
+          
+        }
+        return () => {
+          clearInterval(countdown);
+        };
+      }
+      return () => {
+        clearInterval(countdown2);
+      };
+    }
+    else{
+      if(!readySecondsLeft){
+        setReadySecondsLeft(true)
+      }
+      let countdown: number;
+      if (modalIsOpen && timer > 0) {
+        countdown = window.setInterval(() => {
+          setTimer((prev) => prev - 1);
+        }, 1000);
+      } else if (timer === 0) {
+        closeModal();
+        spinReels();
+      }
+      return () => {
+        clearInterval(countdown);
+      };
+    }
+  }, [modalIsOpen, timer,showTimer,finishedLoop]);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);    
+  };
+  
+  const handleNext = () => {    
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+    setTotalCount(totalCount+10)
+  };
+
+  const handlePrevious = () => {    
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }    
+    setTotalCount(totalCount-10)
+  };
 
   const spinReels = () => { 
     if(currentData.length===10){
@@ -465,94 +551,24 @@ const SlotMachine = () => {
     }, 2000);
   };
 
-  useEffect(() => {
-
-    if(!modalIsOpen){
-      openModal()
+  const handleUserInteraction = () => {
+    if (spinAudioRef.current) {
+      spinAudioRef.current.play().catch((error) => {
+        console.error('Error playing audio:', error);
+      });
     }
-    
-    if(showSymbols){     
-      let countdown2: number;
-      if (modalIsOpen && showTimer > 0) {
-        countdown2 = window.setInterval(() => {
-          
-          setShowTimer((prev) => prev - 1);
-        }, 1000);
-      } else if (showTimer === 0) {
-        const hellokittyResult = localStorage.getItem("allList");
-        if (hellokittyResult) {
-          const myo = JSON.parse(hellokittyResult);
-          if(myo.length===1440){
-            localStorage.removeItem('allList'); 
-            window.location.reload();
-           
-          }
-        }
-        setShowSymbols("")
-        if(secondsLeft>4){
-          setTimer(secondsLeft-4);
-        }else{
-          setTimer(0);
-        }
-        
-        let countdown: number;
-        if (modalIsOpen && timer > 0) {
-          countdown = window.setInterval(() => {
-            setTimer((prev) => prev - 1);
-          }, 1000);
-        } else if (timer === 0) {
-          closeModal();
-          spinReels()
-          
-        }
-        return () => {
-          clearInterval(countdown);
-        };
-      }
-      return () => {
-        clearInterval(countdown2);
-      };
-    }
-    else{
-      if(!readySecondsLeft){
-        setReadySecondsLeft(true)
-      }
-      let countdown: number;
-      if (modalIsOpen && timer > 0) {
-        countdown = window.setInterval(() => {
-          setTimer((prev) => prev - 1);
-        }, 1000);
-      } else if (timer === 0) {
-        closeModal();
-        spinReels();
-      }
-      return () => {
-        clearInterval(countdown);
-      };
-    }
-  }, [modalIsOpen, timer,showTimer,finishedLoop]);
-
-  const openModal = () => {
-    setIsOpen(true);
   };
 
-  const closeModal = () => {
-    setIsOpen(false);    
-  };
-  
-  const handleNext = () => {    
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-    }
-    setTotalCount(totalCount+10)
+  const chooseRandom = () => {
+    const randomIndex = Math.floor(Math.random() * symbols.length);
+    return symbols[randomIndex];
   };
 
-  const handlePrevious = () => {    
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-    }    
-    setTotalCount(totalCount-10)
-    // setAction(true)
+  const toggleMute = () => {
+    if (spinAudioRef.current) {
+      spinAudioRef.current.muted = !isMuted; 
+      setIsMuted(!isMuted);
+    }
   };
 
   return (

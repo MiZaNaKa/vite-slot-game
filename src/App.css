@@ -65,7 +65,6 @@
   font-size: 16px;
 }
 
-
 .table {
   display: flex;
   flex-direction: column;
@@ -90,12 +89,12 @@
 
 .table-cell {
   border: 1px solid #ddd;
-  padding: 10px 0;
+  padding: 6px 0;
   text-align: center;
   background-color: #f7f7f7;
   font-size: 14px;
-  min-width: 35px;
-  height: 21px;
+  min-width: 30px;
+  height: 20px;
 }
 
 .table-cell2{
@@ -108,21 +107,18 @@
   height: 12px;
 }
 
-
-
 .icon{
   width:20px;
   height:20px
 }
 
 .boxLeft{
-  width:35%;
+  width:37%;
   float:left
 }
 
-
 .boxRight{
-  width:65%;
+  width:63%;
   float:right
 }
 
@@ -187,6 +183,14 @@
   vertical-align: middle;
   display: unset;
   color: #000;
+}
+
+.ReactModal__Overlay{
+  width: 100px !important;
+  margin: 0 auto !important;
+  background: none !important;
+  left: 29% !important;
+  right: 50% !important;
 }
 
 
