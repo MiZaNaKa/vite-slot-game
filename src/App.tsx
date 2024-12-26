@@ -90,6 +90,8 @@ const SlotMachine = () => {
   const winAudioRef = useRef<HTMLAudioElement | null>(null); 
   let tempArray: string[] = [];
 
+  
+
   //setTotalCountM
    useEffect(() => {
     if (currentData.length > 0  && currentPage === totalPages) {
@@ -429,6 +431,8 @@ const SlotMachine = () => {
       };
     }
   }, [modalIsOpen, timer,showTimer,finishedLoop]);
+
+  
 
   const openModal = () => {
     setIsOpen(true);
